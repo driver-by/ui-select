@@ -351,11 +351,9 @@
       if (!ctrl.open) return;        
       _resetSearchInput();
       ctrl.open = false;
-      if (!ctrl.multiple){
-        $timeout(function(){
-          ctrl.focusser.prop('disabled', false);
-          if (!skipFocusser) ctrl.focusser[0].focus();
-        },0,false);
+      if (!ctrl.multiple){        
+        ctrl.focusser.prop('disabled', false);
+        if (!skipFocusser) ctrl.focusser[0].focus();
       }
     };
 
