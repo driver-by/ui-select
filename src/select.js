@@ -137,8 +137,8 @@
    * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
    */
   .controller('uiSelectCtrl',
-    ['$scope', '$element', '$timeout', 'RepeatParser', 'uiSelectMinErr',
-    function($scope, $element, $timeout, RepeatParser, uiSelectMinErr) {
+    ['$scope', '$element', '$timeout', 'RepeatParser', 'uiSelectMinErr', 'uiSelectConfig',
+    function($scope, $element, $timeout, RepeatParser, uiSelectMinErr, uiSelectConfig) {
 
     var ctrl = this;
 
@@ -159,6 +159,7 @@
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
     ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
+    ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
 
     ctrl.isEmpty = function() {
       return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
@@ -171,7 +172,7 @@
 
     // Most of the time the user does not want to empty the search input when in typeahead mode
     function _resetSearchInput() {
-      if (ctrl.resetSearchInput) {
+      if (ctrl.resetSearchInput || (ctrl.resetSearchInput === undefined && uiSelectConfig.resetSearchInput)) {
         ctrl.search = EMPTY_SEARCH;
         //reset activeIndex
         if (ctrl.selected && ctrl.items.length && !ctrl.multiple) {
@@ -304,7 +305,13 @@
     };
 
     ctrl.isActive = function(itemScope) {
-      return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+      var isActive = ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+
+      if (isActive && !angular.isUndefined(ctrl.onHighlightCallback)) {
+        itemScope.$eval(ctrl.onHighlightCallback);
+      }
+
+      return isActive;
     };
 
     ctrl.isDisabled = function(itemScope) {
@@ -364,9 +371,24 @@
       e.stopPropagation();
     };
 
+    ctrl.isLocked = function(itemScope, itemIndex) {
+        var isLocked, item = ctrl.selected[itemIndex];
+
+        if (item && !angular.isUndefined(ctrl.lockChoiceExpression)) {
+            isLocked = !!(itemScope.$eval(ctrl.lockChoiceExpression)); // force the boolean value
+            item._uiSelectChoiceLocked = isLocked; // store this for later reference
+        }
+
+        return isLocked;
+    };
+
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
       var removedChoice = ctrl.selected[index];
+
+      // if the choice is locked, can't remove it
+      if(removedChoice._uiSelectChoiceLocked) return;
+
       var locals = {};
       locals[ctrl.parserResult.itemName] = removedChoice;
 
@@ -746,7 +768,7 @@
 
         scope.$watch('searchEnabled', function() {
             var searchEnabled = scope.$eval(attrs.searchEnabled);
-            $select.searchEnabled = searchEnabled !== undefined ? searchEnabled : true;
+            $select.searchEnabled = searchEnabled !== undefined ? searchEnabled : uiSelectConfig.searchEnabled;
         });
 
         attrs.$observe('disabled', function() {
@@ -870,6 +892,7 @@
           $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
 
           $select.disableChoiceExpression = attrs.uiDisableChoice;
+          $select.onHighlightCallback = attrs.onHighlight;
 
           if(groupByExp) {
             var groups = element.querySelectorAll('.ui-select-choices-group');
@@ -883,6 +906,7 @@
           }
 
           choices.attr('ng-repeat', RepeatParser.getNgRepeatExpression($select.parserResult.itemName, '$select.items', $select.parserResult.trackByExp, groupByExp))
+              .attr('ng-if', '$select.open') //Prevent unnecessary watches when dropdown is closed
               .attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
               .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ')');
 
@@ -930,6 +954,7 @@
         return theme + (multi ? '/match-multiple.tpl.html' : '/match.tpl.html');
       },
       link: function(scope, element, attrs, $select) {
+        $select.lockChoiceExpression = attrs.uiLockChoice;
         attrs.$observe('placeholder', function(placeholder) {
           $select.placeholder = placeholder !== undefined ? placeholder : uiSelectConfig.placeholder;
         });
