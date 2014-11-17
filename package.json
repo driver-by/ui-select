@@ -1,10 +1,10 @@
 {
   "name": "ui-select",
   "main": "dist/select.js",
-  "author": "http://github.com/angular-ui/ui-select/graphs/contributors",
-  "homepage": "http://github.com/angular-ui/ui-select",
+  "author": "http://github.com/driver-by/ui-select/graphs/contributors",
+  "homepage": "http://github.com/driver-by/ui-select",
   "repository": {
-    "url": "git://github.com/angular-ui/ui-select.git"
+    "url": "git://github.com/driver-by/ui-select.git"
   },
   "version": "0.8.3",
   "devDependencies": {
