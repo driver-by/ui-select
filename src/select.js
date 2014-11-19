@@ -648,18 +648,27 @@
 
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
-          var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search 
+          var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search
               locals = {},
               result;
-          if (data){
+            if (data){
             if ($select.multiple){
-              var resultMultiple = [];
+              var resultMultiple = [],
+                  parseValue;
               var checkFnMultiple = function(list, value){
                 if (!list || !list.length) return;
                 for (var p = list.length - 1; p >= 0; p--) {
                   locals[$select.parserResult.itemName] = list[p];
                   result = $select.parserResult.modelMapper(scope, locals);
-                  if (result == value){
+                  locals[$select.parserResult.itemName] = value;
+                  parseValue = $select.parserResult.modelMapper(scope, locals);
+
+                  if (parseValue) {
+                    if (result == parseValue) {
+                      resultMultiple.unshift(list[p]);
+                      return true;
+                    }
+                  } else if (result == value) {
                     resultMultiple.unshift(list[p]);
                     return true;
                   }

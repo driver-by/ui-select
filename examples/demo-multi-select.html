@@ -136,6 +136,8 @@
 
   <hr>
   <h3>Deselect callback with single property binding</h3>
+  <p><button ng-click="multipleDemo.deSelectedPeople.push({ name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' })">Select Adam</button></p>
+  <p><button ng-click="multipleDemo.deSelectedPeople.push({ name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' }) && multipleDemo.deSelectedPeople.push({ name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' })">Select Amalie, Estefanía</button></p>
   <ui-select multiple ng-model="multipleDemo.deSelectedPeople" on-remove="removed($item, $model)" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person.email as person in people | propsFilter: {name: $select.search, age: $select.search}">
@@ -148,6 +150,7 @@
   </ui-select>
   <p>Last removed item: {{lastRemoved.item}}</p>
   <p>Last removed model: {{lastRemoved.model}}</p>
+  <p>Selected: {{ multipleDemo.deSelectedPeople }}</p>
 
   <hr>
   <h3>Array of objects with single property binding</h3>
