@@ -663,13 +663,21 @@
               result;
           if (data){
             if ($select.multiple){
-              var resultMultiple = [];
-              var checkFnMultiple = function(list, value){
+              var resultMultiple = [],
+                parseValue,
+                checkFnMultiple = function(list, value){
                 if (!list || !list.length) return;
                 for (var p = list.length - 1; p >= 0; p--) {
                   locals[$select.parserResult.itemName] = list[p];
                   result = $select.parserResult.modelMapper(scope, locals);
-                  if (result == value){
+                  locals[$select.parserResult.itemName] = value;
+                  parseValue = $select.parserResult.modelMapper(scope, locals);
+                  if (parseValue) {
+                    if (result == parseValue) {
+                      resultMultiple.unshift(list[p]);
+                      return true;
+                    }
+                  } else if (result == value) {
                     resultMultiple.unshift(list[p]);
                     return true;
                   }

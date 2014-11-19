@@ -164,18 +164,22 @@
   <p>Selected: {{multipleDemo.selectedPeopleSimple}}</p>
 
   <hr>
-  <h3>Array of objects (with groupBy)</h3>
-  <ui-select multiple ng-model="multipleDemo.selectedPeopleWithGroupBy" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;">
-    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
-    <ui-select-choices group-by="someGroupFn" repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
-      <div ng-bind-html="person.name | highlight: $select.search"></div>
-      <small>
-        email: {{person.email}}
-        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
-      </small>
-    </ui-select-choices>
+  <h3>Populate multi select</h3>
+  <p>
+    <button ng-click="populate([{name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States'}])">Populate 'Adam'</button>
+    <button ng-click="populate([{name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States'}, {name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina'}])">Populate 'Adam' and 'Estefanía'</button>
+  </p>
+  <ui-select multiple ng-model="multipleDemo.populateSelection" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;">
+      <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+      <ui-select-choices repeat="person.email as person in people | propsFilter: {name: $select.search, age: $select.search}">
+          <div ng-bind-html="person.name | highlight: $select.search"></div>
+          <small>
+              email: {{person.email}}
+              age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+          </small>
+      </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.selectedPeopleWithGroupBy}}</p>
+  <p>Selected: {{multipleDemo.populateSelection}}</p>
 
   <div style="height:500px"></div>
 
