@@ -659,8 +659,8 @@
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
           var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search
-            locals = {},
-            result;
+          locals = {},
+          result;
           if (data){
             if ($select.multiple){
               var resultMultiple = [],
