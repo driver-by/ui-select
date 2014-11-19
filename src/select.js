@@ -656,26 +656,44 @@
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
           var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search
-              locals = {},
-              result;
-            if (data){
+            locals = {},
+            result;
+          if (data){
             if ($select.multiple){
               var resultMultiple = [],
-                  parseValue;
+                parseValue,
+                unshiftResult;
               var checkFnMultiple = function(list, value){
                 if (!list || !list.length) return;
                 for (var p = list.length - 1; p >= 0; p--) {
+                  unshiftResult = false;
                   locals[$select.parserResult.itemName] = list[p];
                   result = $select.parserResult.modelMapper(scope, locals);
                   locals[$select.parserResult.itemName] = value;
                   parseValue = $select.parserResult.modelMapper(scope, locals);
 
                   if (parseValue) {
-                    if (result == parseValue) {
-                      resultMultiple.unshift(list[p]);
-                      return true;
+                    if (angular.isObject(result)) {
+                      if (angular.equals(result, parseValue)) {
+                        unshiftResult = true;
+                      }
+                    } else {
+                      if (result == parseValue) {
+                        unshiftResult = true;
+                      }
                     }
-                  } else if (result == value) {
+                  } else {
+                    if (angular.isObject(result)) {
+                      if (angular.equals(result, value)) {
+                        unshiftResult = true;
+                      }
+                    } else {
+                      if (result == value) {
+                        unshiftResult = true;
+                      }
+                    }
+                  }
+                  if (unshiftResult) {
                     resultMultiple.unshift(list[p]);
                     return true;
                   }
