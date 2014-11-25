@@ -288,7 +288,9 @@
      *
      * See Expose $select.search for external / remote filtering https://github.com/angular-ui/ui-select/pull/31
      */
-    ctrl.refresh = function(refreshAttr) {
+    ctrl.refresh = function(refreshAttr, forceRefresh) {
+      var delay = ctrl.refreshDelay;
+
       if (refreshAttr !== undefined) {
 
         // Debounce
@@ -297,9 +299,12 @@
         if (_refreshDelayPromise) {
           $timeout.cancel(_refreshDelayPromise);
         }
+        if (forceRefresh) {
+          delay = 0;
+        }
         _refreshDelayPromise = $timeout(function() {
           $scope.$eval(refreshAttr);
-        }, ctrl.refreshDelay);
+        }, delay);
       }
     };
 
@@ -535,6 +540,9 @@
 
       var key = e.which;
 
+      if (key == KEY.TAB) {
+        ctrl.refresh(ctrl.refreshAttr, true);
+      }
       if([KEY.ESC,KEY.TAB].indexOf(key) !== -1){
          ctrl.close();
       }
@@ -924,7 +932,7 @@
           var groupByExp = attrs.groupBy;
 
           $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
-
+          $select.refreshAttr = attrs.refresh;
           $select.disableChoiceExpression = attrs.uiDisableChoice;
           $select.onHighlightCallback = attrs.onHighlight;
 

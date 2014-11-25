@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.8.3 - 2014-11-19T09:26:45.891Z
+ * Version: 0.8.3 - 2014-11-25T06:32:51.488Z
  * License: MIT
  */
 
@@ -296,7 +296,9 @@
      *
      * See Expose $select.search for external / remote filtering https://github.com/angular-ui/ui-select/pull/31
      */
-    ctrl.refresh = function(refreshAttr) {
+    ctrl.refresh = function(refreshAttr, forceRefresh) {
+      var delay = ctrl.refreshDelay;
+      window.console.log('refresh', refreshAttr);
       if (refreshAttr !== undefined) {
 
         // Debounce
@@ -305,9 +307,12 @@
         if (_refreshDelayPromise) {
           $timeout.cancel(_refreshDelayPromise);
         }
+        if (forceRefresh) {
+          delay = 0;
+        }
         _refreshDelayPromise = $timeout(function() {
           $scope.$eval(refreshAttr);
-        }, ctrl.refreshDelay);
+        }, delay);
       }
     };
 
@@ -542,7 +547,10 @@
     _searchInput.on('keydown', function(e) {
 
       var key = e.which;
-
+      window.console.log(key);
+      if (key == KEY.TAB) {
+        ctrl.refresh(ctrl.refreshAttr, true);
+      }
       if([KEY.ESC,KEY.TAB].indexOf(key) !== -1){
          ctrl.close();
       }
@@ -932,7 +940,7 @@
           var groupByExp = attrs.groupBy;
 
           $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
-
+          $select.refreshAttr = attrs.refresh;
           $select.disableChoiceExpression = attrs.uiDisableChoice;
           $select.onHighlightCallback = attrs.onHighlight;
 
