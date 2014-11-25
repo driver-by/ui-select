@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.8.3 - 2014-11-25T06:32:51.488Z
+ * Version: 0.8.3 - 2014-11-25T06:46:32.819Z
  * License: MIT
  */
 
@@ -298,7 +298,7 @@
      */
     ctrl.refresh = function(refreshAttr, forceRefresh) {
       var delay = ctrl.refreshDelay;
-      window.console.log('refresh', refreshAttr);
+
       if (refreshAttr !== undefined) {
 
         // Debounce
@@ -547,7 +547,7 @@
     _searchInput.on('keydown', function(e) {
 
       var key = e.which;
-      window.console.log(key);
+
       if (key == KEY.TAB) {
         ctrl.refresh(ctrl.refreshAttr, true);
       }
