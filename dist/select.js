@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.8.3 - 2014-11-25T06:46:32.819Z
+ * Version: 0.8.3 - 2014-12-12T06:30:59.676Z
  * License: MIT
  */
 
@@ -167,6 +167,7 @@
     ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
+    ctrl.multipleAsync = false; // Initialized inside uiSelect directive link function
     ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
     ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
     ctrl.closeOnSelect = true; // Initialized inside uiSelect directive link function
@@ -644,6 +645,7 @@
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
         $select.multiple = (angular.isDefined(attrs.multiple)) ? (attrs.multiple === '') ? true : (attrs.multiple.toLowerCase() === 'true') : false;
+        $select.multipleAsync = angular.isDefined(attrs.multipleAsync);
         $select.closeOnSelect = (angular.isDefined(attrs.closeOnSelect) && attrs.closeOnSelect.toLowerCase() === 'false') ? false : uiSelectConfig.closeOnSelect;
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
@@ -718,8 +720,13 @@
               };
               if (!inputValue) return resultMultiple; //If ngModel was undefined
               for (var k = inputValue.length - 1; k >= 0; k--) {
-                if (!checkFnMultiple($select.selected, inputValue[k])){
-                  checkFnMultiple(data, inputValue[k]);
+                if ($select.multipleAsync) {
+                  // Get result async. Don't compare values with multiselect values
+                  resultMultiple.unshift(inputValue[k]);
+                } else {
+                  if (!checkFnMultiple($select.selected, inputValue[k])){
+                    checkFnMultiple(data, inputValue[k]);
+                  }
                 }
               }
               return resultMultiple;
