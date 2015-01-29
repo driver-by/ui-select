@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.8.3 - 2014-12-12T06:30:59.678Z
+ * Version: 0.8.3 - 2015-01-29T12:39:38.806Z
  * License: MIT
  */
 
@@ -168,4 +168,13 @@
 /* Mark invalid Bootstrap */
 .ui-select-bootstrap.ng-dirty.ng-invalid > button.btn.ui-select-match {
     border-color: #D44950;
+}
+
+.ui-select-match-close-all {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    height: 8px;
+    margin-top: -4px;
 }

@@ -397,8 +397,20 @@
 
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
-      var removedChoice = ctrl.selected[index];
+      var removedChoice;
 
+      if (angular.isDefined(index)) {
+        removedChoice = ctrl.selected[index];
+      } else {
+        // For single select
+        removedChoice = ctrl.selected;
+        ctrl.selected = null;
+        ctrl.onRemoveCallback($scope, {
+          $item: removedChoice,
+          $model: ctrl.parserResult.modelMapper($scope, locals)
+        });
+        return;
+      }
       // if the choice is locked, can't remove it
       if(removedChoice._uiSelectChoiceLocked) return;
 
