@@ -2,6 +2,33 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
   return {
     restrict: 'EA',
     require: ['^uiSelect', '^ngModel'],
+    controller: ['$scope', '$timeout', function($scope, $timeout) {
+      var ctrl = this,
+        $select = $scope.$select;
+
+      $select.removeChoice = function(){
+
+        var removedChoice = $select.selected;
+
+        // if the choice is locked, can't remove it
+        if(removedChoice._uiSelectChoiceLocked) return;
+
+        var locals = {};
+        locals[$select.parserResult.itemName] = removedChoice;
+
+        $select.selected = null;
+        ctrl.activeMatchIndex = -1;
+        $select.sizeSearchInput();
+
+        // Give some time for scope propagation.
+        $timeout(function(){
+          $select.onRemoveCallback($scope, {
+            $item: removedChoice,
+            $model: $select.parserResult.modelMapper($scope, locals)
+          });
+        });
+      };
+    }],
     link: function(scope, element, attrs, ctrls) {
 
       var $select = ctrls[0];

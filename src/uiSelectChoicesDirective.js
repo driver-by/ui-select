@@ -23,7 +23,7 @@ uis.directive('uiSelectChoices',
         var groupByExp = attrs.groupBy;
 
         $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
-
+        $select.refreshAttr = attrs.refresh;
         $select.disableChoiceExpression = attrs.uiDisableChoice;
         $select.onHighlightCallback = attrs.onHighlight;
 

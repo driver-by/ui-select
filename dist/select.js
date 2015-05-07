@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.11.2 - 2015-05-01T07:13:50.988Z
+ * Version: 0.11.2 - 2015-05-07T10:59:51.355Z
  * License: MIT
  */
 
@@ -643,7 +643,9 @@ uis.controller('uiSelectCtrl',
       ctrl.refresh(ctrl.refreshAttr, true);
     }
     if([KEY.ESC,KEY.TAB].indexOf(key) !== -1){
-      ctrl.close();
+      $timeout(function() {
+        ctrl.close();
+      });
     }
 
     $scope.$apply(function() {
@@ -1431,6 +1433,33 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
   return {
     restrict: 'EA',
     require: ['^uiSelect', '^ngModel'],
+    controller: ['$scope', '$timeout', function($scope, $timeout) {
+      var ctrl = this,
+        $select = $scope.$select;
+
+      $select.removeChoice = function(){
+
+        var removedChoice = $select.selected;
+
+        // if the choice is locked, can't remove it
+        if(removedChoice._uiSelectChoiceLocked) return;
+
+        var locals = {};
+        locals[$select.parserResult.itemName] = removedChoice;
+
+        $select.selected = null;
+        ctrl.activeMatchIndex = -1;
+        $select.sizeSearchInput();
+
+        // Give some time for scope propagation.
+        $timeout(function(){
+          $select.onRemoveCallback($scope, {
+            $item: removedChoice,
+            $model: $select.parserResult.modelMapper($scope, locals)
+          });
+        });
+      };
+    }],
     link: function(scope, element, attrs, ctrls) {
 
       var $select = ctrls[0];

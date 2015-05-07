@@ -163,7 +163,9 @@ uis.controller('uiSelectCtrl',
    *
    * See Expose $select.search for external / remote filtering https://github.com/angular-ui/ui-select/pull/31
    */
-  ctrl.refresh = function(refreshAttr) {
+  ctrl.refresh = function(refreshAttr, forceRefresh) {
+    var delay = ctrl.refreshDelay;
+
     if (refreshAttr !== undefined) {
 
       // Debounce
@@ -172,9 +174,12 @@ uis.controller('uiSelectCtrl',
       if (_refreshDelayPromise) {
         $timeout.cancel(_refreshDelayPromise);
       }
+      if (forceRefresh) {
+        delay = 0;
+      }
       _refreshDelayPromise = $timeout(function() {
         $scope.$eval(refreshAttr);
-      }, ctrl.refreshDelay);
+      }, delay);
     }
   };
 
@@ -398,10 +403,14 @@ uis.controller('uiSelectCtrl',
 
     var key = e.which;
 
-    // if(~[KEY.ESC,KEY.TAB].indexOf(key)){
-    //   //TODO: SEGURO?
-    //   ctrl.close();
-    // }
+    if (key == KEY.TAB) {
+      ctrl.refresh(ctrl.refreshAttr, true);
+    }
+    if([KEY.ESC,KEY.TAB].indexOf(key) !== -1){
+      $timeout(function() {
+        ctrl.close();
+      });
+    }
 
     $scope.$apply(function() {
 
