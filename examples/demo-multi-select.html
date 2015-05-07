@@ -111,18 +111,17 @@
   <p>Selected: {{country.selected}}</p> -->
 
 <h1>Multi Selection Demos</h1>
-
-<h3>Array of strings</h3>
-<ui-select multiple ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 300px;">
+  <h3>Array of strings</h3>
+  <ui-select multiple ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
     <ui-select-choices repeat="color in availableColors | filter:$select.search">
         {{color}}
     </ui-select-choices>
-</ui-select>
-<p>Selected: {{multipleDemo.colors}}</p>
-<hr>
-<h3>Array of objects</h3>
-<ui-select multiple ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;">
+  </ui-select>
+  <p>Selected: {{multipleDemo.colors}}</p>
+  <hr>
+  <h3>Array of objects (sorting enabled)</h3>
+  <ui-select multiple ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" sortable="true" close-on-select="false" style="width: 800px;">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
         <div ng-bind-html="person.name | highlight: $select.search"></div>
@@ -134,9 +133,9 @@
 </ui-select>
 <p>Selected: {{multipleDemo.selectedPeople}}</p>
 
-<hr>
-<h3>Deselect callback with single property binding</h3>
-<ui-select multiple ng-model="multipleDemo.deSelectedPeople" on-remove="removed($item, $model)" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;">
+  <hr>
+  <h3>Deselect callback with single property binding</h3>
+  <ui-select multiple ng-model="multipleDemo.deSelectedPeople" on-remove="removed($item, $model)" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person.email as person in people | propsFilter: {name: $select.search, age: $select.search}">
         <div ng-bind-html="person.name | highlight: $select.search"></div>
@@ -149,9 +148,9 @@
 <p>Last removed item: {{lastRemoved.item}}</p>
 <p>Last removed model: {{lastRemoved.model}}</p>
 
-<hr>
-<h3>Array of objects with single property binding</h3>
-<ui-select multiple ng-model="multipleDemo.selectedPeopleSimple" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;">
+  <hr>
+  <h3>Array of objects with single property binding</h3>
+  <ui-select multiple ng-model="multipleDemo.selectedPeopleSimple" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person.email as person in people | propsFilter: {name: $select.search, age: $select.search}">
         <div ng-bind-html="person.name | highlight: $select.search"></div>
@@ -163,9 +162,9 @@
 </ui-select>
 <p>Selected: {{multipleDemo.selectedPeopleSimple}}</p>
 
-<hr>
-<h3>Array of objects (with groupBy)</h3>
-<ui-select multiple ng-model="multipleDemo.selectedPeopleWithGroupBy" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;">
+  <hr>
+  <h3>Array of objects (with groupBy)</h3>
+  <ui-select multiple ng-model="multipleDemo.selectedPeopleWithGroupBy" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices group-by="someGroupFn" repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
         <div ng-bind-html="person.name | highlight: $select.search"></div>

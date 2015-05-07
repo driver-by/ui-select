@@ -39,9 +39,13 @@ app.filter('propsFilter', function() {
   };
 });
 
-app.controller('DemoCtrl', function($scope, $http, $timeout) {
+app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   $scope.disabled = undefined;
   $scope.searchEnabled = undefined;
+
+  $scope.setInputFocus = function (){
+    $scope.$broadcast('UiSelectDemo1');
+  }
 
   $scope.enable = function() {
     $scope.disabled = false;
@@ -106,6 +110,17 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
     };
   };
 
+  $scope.tagTransform = function (newTag) {
+    var item = {
+        name: newTag,
+        email: newTag.toLowerCase()+'@email.com',
+        age: 'unknown',
+        country: 'unknown'
+    };
+
+    return item;
+  };
+
   $scope.person = {};
   $scope.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
@@ -122,12 +137,33 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
 
   $scope.availableColors = ['Red','Green','Blue','Yellow','Magenta','Maroon','Umbra','Turquoise'];
 
+  $scope.singleDemo = {};
+  $scope.singleDemo.color = '';
   $scope.multipleDemo = {};
   $scope.multipleDemo.colors = ['Blue','Red'];
+  $scope.multipleDemo.colors2 = ['Blue','Red'];
   $scope.multipleDemo.selectedPeople = [$scope.people[5], $scope.people[4]];
+  $scope.multipleDemo.selectedPeople2 = $scope.multipleDemo.selectedPeople;
   $scope.multipleDemo.selectedPeopleWithGroupBy = [$scope.people[8], $scope.people[6]];
   $scope.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
 
+  $scope.appendToBodyDemo = {
+    remainingToggleTime: 0,
+    present: true,
+    startToggleTimer: function() {
+      var scope = $scope.appendToBodyDemo;
+      var promise = $interval(function() {
+        if (scope.remainingTime < 1000) {
+          $interval.cancel(promise);
+          scope.present = !scope.present;
+          scope.remainingTime = 0;
+        } else {
+          scope.remainingTime -= 1000;
+        }
+      }, 1000);
+      scope.remainingTime = 3000;
+    }
+  };
 
   $scope.address = {};
   $scope.refreshAddresses = function(address) {
@@ -152,6 +188,12 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
     });
   };
 
+  $scope.addPerson = function(item, model){
+    if(item.hasOwnProperty('isTag')) {
+      delete item.isTag;
+      $scope.people.push(item);
+    }
+  }
   $scope.country = {};
   $scope.countries = [ // Taken from https://gist.github.com/unceus/6501985
     {name: 'Afghanistan', code: 'AF'},
