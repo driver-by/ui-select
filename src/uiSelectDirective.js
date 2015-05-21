@@ -155,6 +155,10 @@ uis.directive('uiSelect',
           $select.clickTriggeredSelect = false;
         }
 
+        $select.searchInput.on('blur', function() {
+          $select.close(true);
+        });
+
         // See Click everywhere but here event http://stackoverflow.com/questions/12931369
         $document.on('click', onDocumentClick);
 

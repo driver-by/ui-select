@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.11.2 - 2015-05-21T12:02:42.005Z
+ * Version: 0.11.2 - 2015-05-21T13:24:42.284Z
  * License: MIT
  */
 
@@ -896,6 +896,10 @@ uis.directive('uiSelect',
           }
           $select.clickTriggeredSelect = false;
         }
+
+        $select.searchInput.on('blur', function() {
+          $select.close(true);
+        });
 
         // See Click everywhere but here event http://stackoverflow.com/questions/12931369
         $document.on('click', onDocumentClick);
