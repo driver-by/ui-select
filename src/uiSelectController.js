@@ -77,10 +77,10 @@ uis.controller('uiSelectCtrl',
       }
 
       // Give it time to appear before focus
-      $timeout(function() {
-        ctrl.search = initSearchValue || ctrl.search;
-        ctrl.searchInput[0].focus();
-      });
+      // Using this code without timeout won't work if input is hidden
+      // So you MUST provide 'opacity: 0' for drop down block, not 'display: none'. 'height: 0; overflow: hidden;' might be necessary too
+      ctrl.search = initSearchValue || ctrl.search;
+      ctrl.searchInput[0].focus();
     }
   };
 
@@ -292,13 +292,13 @@ uis.controller('uiSelectCtrl',
   };
 
   // Closes the dropdown
-  ctrl.close = function(skipFocusser) {
+  ctrl.close = function() {
     if (!ctrl.open) return;
     if (ctrl.ngModel && ctrl.ngModel.$setTouched) ctrl.ngModel.$setTouched();
     _resetSearchInput();
     ctrl.open = false;
 
-    $scope.$broadcast('uis:close', skipFocusser);
+    $scope.$broadcast('uis:close', true);
 
   };
 
