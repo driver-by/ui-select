@@ -155,15 +155,19 @@ uis.directive('uiSelect',
           $select.clickTriggeredSelect = false;
         }
 
-        $select.searchInput.on('blur', function() {
-          $select.close(true);
-        });
+        function onFocusIn(e) {
+          if ($select.searchInput[0] !== e.target) {
+            $select.close();
+          }
+        }
 
         // See Click everywhere but here event http://stackoverflow.com/questions/12931369
         $document.on('click', onDocumentClick);
+        $document.on('focusin', onFocusIn);
 
         scope.$on('$destroy', function() {
           $document.off('click', onDocumentClick);
+          $document.off('focusin', onFocusIn);
         });
 
         // Move transcluded elements to their correct position in main template

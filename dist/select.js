@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.11.2 - 2015-05-21T13:24:42.284Z
+ * Version: 0.11.2 - 2015-05-25T06:50:30.171Z
  * License: MIT
  */
 
@@ -312,7 +312,6 @@ uis.controller('uiSelectCtrl',
         ctrl.activeIndex = 0;
       }
 
-      // Give it time to appear before focus
       // Using this code without timeout won't work if input is hidden
       // So you MUST provide 'opacity: 0' for drop down block, not 'display: none'. 'height: 0; overflow: hidden;' might be necessary too
       ctrl.search = initSearchValue || ctrl.search;
@@ -897,15 +896,19 @@ uis.directive('uiSelect',
           $select.clickTriggeredSelect = false;
         }
 
-        $select.searchInput.on('blur', function() {
-          $select.close(true);
-        });
+        function onFocusIn(e) {
+          if ($select.searchInput[0] !== e.target) {
+            $select.close();
+          }
+        }
 
         // See Click everywhere but here event http://stackoverflow.com/questions/12931369
         $document.on('click', onDocumentClick);
+        $document.on('focusin', onFocusIn);
 
         scope.$on('$destroy', function() {
           $document.off('click', onDocumentClick);
+          $document.off('focusin', onFocusIn);
         });
 
         // Move transcluded elements to their correct position in main template

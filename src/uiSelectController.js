@@ -76,7 +76,6 @@ uis.controller('uiSelectCtrl',
         ctrl.activeIndex = 0;
       }
 
-      // Give it time to appear before focus
       // Using this code without timeout won't work if input is hidden
       // So you MUST provide 'opacity: 0' for drop down block, not 'display: none'. 'height: 0; overflow: hidden;' might be necessary too
       ctrl.search = initSearchValue || ctrl.search;
