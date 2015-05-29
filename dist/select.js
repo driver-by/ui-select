@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/driver-by/ui-select
- * Version: 0.11.2 - 2015-05-25T06:50:30.171Z
+ * Version: 0.11.2 - 2015-05-29T08:20:13.443Z
  * License: MIT
  */
 
@@ -897,6 +897,9 @@ uis.directive('uiSelect',
         }
 
         function onFocusIn(e) {
+          if (e.target.nodeName !== 'INPUT' || e.target.nodeName !== 'SELECT') {
+            return;
+          }
           if ($select.searchInput[0] !== e.target) {
             $select.close();
           }

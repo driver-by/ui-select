@@ -156,6 +156,9 @@ uis.directive('uiSelect',
         }
 
         function onFocusIn(e) {
+          if (e.target.nodeName !== 'INPUT' || e.target.nodeName !== 'SELECT') {
+            return;
+          }
           if ($select.searchInput[0] !== e.target) {
             $select.close();
           }
